@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهنئة العيد - جمعية عمارة</title>
-    <!-- استدعاء خط تجوال -->
+    <title>تهنئة العيد - جمعية عمارة للعناية بالمساجد</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: #f0f6f6;
+            background-color: #f0f6f6; /* لون خلفية مريح */
             margin: 0;
             padding: 20px;
             display: flex;
@@ -28,15 +27,21 @@
             width: 100%;
         }
         h2 {
-            color: #105C66;
-            margin-bottom: 20px;
+            color: #105C66; /* لون مقارب للشعار */
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        p.subtitle {
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 14px;
         }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         input[type="text"] {
-            width: 80%;
-            padding: 12px;
+            width: 85%;
+            padding: 15px;
             font-size: 16px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -52,21 +57,43 @@
             height: auto;
             border-radius: 10px;
             border: 1px solid #ddd;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
         }
         .btn {
-            background-color: #d39e35;
             color: #ffffff;
             border: none;
-            padding: 12px 25px;
+            padding: 14px 28px;
             font-size: 18px;
             font-family: 'Tajawal', sans-serif;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
         }
-        .btn:hover {
+        /* زر التحميل */
+        .btn-download {
+            background-color: #d39e35; /* اللون الذهبي من التصميم */
+        }
+        .btn-download:hover {
+            background-color: #b8862d;
+        }
+        /* زر الواتساب */
+        .btn-whatsapp {
+            background-color: #d39e35; /* لون ذهبي مطابق للتصميم */
+        }
+        .btn-whatsapp:hover {
             background-color: #b8862d;
         }
     </style>
@@ -74,16 +101,19 @@
 <body>
 
     <div class="container">
-        <h2>بطاقات التهنئة - جمعية عمارة</h2>
+        <h2>تهنئة عيد الفطر المبارك</h2>
+        <p class="subtitle">من جمعية عمارة للعناية بالمساجد بمنطقة جازان</p>
         
         <div class="input-group">
-            <input type="text" id="nameInput" placeholder="أدخل الاسم هنا..." oninput="drawCard()">
+            <input type="text" id="nameInput" placeholder="أدخل اسمك هنا للحصول على البطاقة..." oninput="drawCard()">
         </div>
 
         <canvas id="cardCanvas" width="1080" height="1350"></canvas>
         
-        <br>
-        <button class="btn" onclick="downloadCard()">تحميل البطاقة 📥</button>
+        <div class="action-buttons">
+            <button class="btn btn-download" onclick="downloadCard()">تحميل البطاقة 📥</button>
+            <a href="#" id="whatsappLink" class="btn btn-whatsapp" onclick="shareOnWhatsApp(event)">ارسل عبر الواتساب 💬</a>
+        </div>
     </div>
 
     <script>
@@ -93,14 +123,18 @@
         
         image.src = 'card.jpg';
 
-        // هنا نأمر المتصفح بانتظار تحميل الخط والصورة معاً قبل الرسم
-        Promise.all([
-            new Promise(resolve => image.onload = resolve),
-            document.fonts.ready
-        ]).then(() => {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            drawCard();
+        // التأكد من تحميل الخط والصورة قبل الرسم
+        document.fonts.ready.then(() => {
+            image.onload = () => {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                drawCard();
+            };
+            if(image.complete) {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                drawCard();
+            }
         });
 
         function drawCard() {
@@ -110,33 +144,45 @@
             const name = document.getElementById('nameInput').value;
 
             if (name.trim() !== "") {
-                // تفعيل خط تجوال وتحديد الحجم (يمكنك تصغير 50px إذا كان الاسم طويلاً)
-                ctx.font = '700 50px "Tajawal", sans-serif'; 
-                ctx.fillStyle = '#105C66'; 
+                // إعدادات الخط: تصغير الحجم ليتناسب مع المربع (45px)
+                ctx.font = '700 45px "Tajawal", sans-serif'; 
+                
+                // *** تم تعديل اللون هنا ***
+                ctx.fillStyle = '#105C66'; /* لون أخضر مزرق غامق مطابق تماماً للشعار وتصميم البطاقة */
+                
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
                 const x = canvas.width / 2;
                 
-                // قمنا بزيادة الرقم إلى 0.895 لإنزال النص داخل المربع الأبيض
-                const y = canvas.height * 0.895; 
+                // *** تم تثبيت الرقم هنا (الرقم المثالي الذي يجعل النص في منتصف المربع الأبيض) ***
+                const y = canvas.height * 0.915; 
 
                 ctx.fillText(name, x, y);
             }
         }
 
-        function downloadCard() {
+        // دالة مشتركة لإعداد رابط التحميل
+        function prepareDownload() {
             const name = document.getElementById('nameInput').value;
             if (name.trim() === "") {
-                alert("الرجاء إدخال الاسم أولاً قبل تحميل البطاقة.");
-                return;
+                alert("الرجاء إدخال اسمك أولاً.");
+                return null;
             }
+            return {
+                dataUrl: canvas.toDataURL('image/png'),
+                filename: `تهنئة_جمعية_عمارة_${name}.png`
+            };
+        }
+
+        function downloadCard() {
+            const fileData = prepareDownload();
+            if(!fileData) return;
 
             const link = document.createElement('a');
-            link.download = `تهنئة_جمعية_عمارة_${name}.png`;
-            link.href = canvas.toDataURL('image/png');
+            link.download = fileData.filename;
+            link.href = fileData.dataUrl;
             link.click();
         }
-    </script>
-</body>
-</html>
+
+        function share
