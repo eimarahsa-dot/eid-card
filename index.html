@@ -119,6 +119,7 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
+        // استخدام الرابط المباشر لضمان ظهور الصورة دائماً
         image.src = 'https://eimarahsa-dot.github.io/eid-card/card.jpg';
 
         document.fonts.ready.then(() => {
@@ -147,7 +148,9 @@
                 ctx.textBaseline = 'middle';
 
                 const x = canvas.width / 2;
-                const y = canvas.height * 0.915; 
+                
+                // التعديل هنا: تم تقليل الرقم لرفع النص للأعلى ليصبح في منتصف المربع الأبيض
+                const y = canvas.height * 0.885; 
 
                 ctx.fillText(name, x, y);
             }
