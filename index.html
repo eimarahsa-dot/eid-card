@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تهنئة العيد - جمعية عمارة للعناية بالمساجد</title>
-    <!-- تم تغيير الخط إلى خط Cairo الفخم -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+    <!-- استدعاء خط Cairo بالوزن العريض جداً (900) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -47,6 +47,7 @@
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-family: 'Cairo', sans-serif;
+            font-weight: 900;
             transition: border-color 0.3s;
         }
         input[type="text"]:focus {
@@ -84,16 +85,16 @@
             text-decoration: none;
         }
         .btn-download {
-            background-color: #d39e35;
+            background-color: #cca052; /* تم توحيد لون الأزرار مع البيج الجديد */
         }
         .btn-download:hover {
-            background-color: #b8862d;
+            background-color: #b38942;
         }
         .btn-whatsapp {
-            background-color: #d39e35;
+            background-color: #cca052;
         }
         .btn-whatsapp:hover {
-            background-color: #b8862d;
+            background-color: #b38942;
         }
     </style>
 </head>
@@ -142,11 +143,11 @@
             const name = document.getElementById('nameInput').value;
 
             if (name.trim() !== "") {
-                // تكبير الخط قليلاً ليصبح 48 واستخدام خط Cairo
-                ctx.font = '700 48px "Cairo", sans-serif'; 
+                // استخدام خط Cairo مع وزن 900 (عريض جداً) وتكبير الحجم قليلاً لـ 52
+                ctx.font = '900 52px "Cairo", sans-serif'; 
                 
-                // تغيير اللون إلى الذهبي المأخوذ من التصميم
-                ctx.fillStyle = '#d39e35'; 
+                // اللون البيج المستوحى من التصميم
+                ctx.fillStyle = '#cca052'; 
                 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
