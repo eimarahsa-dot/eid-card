@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>بطاقة تهنئة بالعيد</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+  background: #f5f5f5;
+}
+
+input {
+  padding: 10px;
+  width: 200px;
+  margin: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+canvas {
+  max-width: 100%;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🎉 صمم بطاقة عيدك</h2>
+
+<input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
+<button onclick="generateCard()">إنشاء البطاقة</button>
+
+<br>
+
+<canvas id="cardCanvas" width="1080" height="1350"></canvas>
+
+<br><br>
+<button onclick="downloadImage()">تحميل البطاقة</button>
+
+<script>
+const canvas = document.getElementById("cardCanvas");
+const ctx = canvas.getContext("2d");
+
+const image = new Image();
+image.src = "card.jpg";
+
+image.onload = function () {
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+
+// قراءة الاسم من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const autoName = urlParams.get('name');
+
+if (autoName) {
+    document.getElementById("nameInput").value = autoName;
+    setTimeout(generateCard, 500);
+}
+
+function generateCard() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const name = document.getElementById("nameInput").value;
+
+    ctx.font = "bold 50px Cairo";
+    ctx.fillStyle = "#0c6b6b";
+    ctx.textAlign = "center";
+
+    ctx.fillText("من: " + name, canvas.width / 2, 1120);
+}
+
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'eid-card.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}
+</script>
+
+</body>
+</html>
