@@ -1,90 +1,142 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>بطاقة تهنئة بالعيد</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
-
-<style>
-body {
-  text-align: center;
-  font-family: 'Cairo', sans-serif;
-  background: #f5f5f5;
-}
-
-input {
-  padding: 10px;
-  width: 200px;
-  margin: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-canvas {
-  max-width: 100%;
-  margin-top: 20px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهنئة العيد - جمعية عمارة</title>
+    <!-- استدعاء خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f6f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            color: #105C66;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #105C66;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #d39e35;
+            color: #ffffff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #b8862d;
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>🎉 صمم بطاقة عيدك</h2>
+    <div class="container">
+        <h2>بطاقات التهنئة - جمعية عمارة</h2>
+        
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="أدخل الاسم هنا..." oninput="drawCard()">
+        </div>
 
-<input type="text" id="nameInput" placeholder="اكتب اسمك هنا">
-<button onclick="generateCard()">إنشاء البطاقة</button>
+        <canvas id="cardCanvas" width="1080" height="1350"></canvas>
+        
+        <br>
+        <button class="btn" onclick="downloadCard()">تحميل البطاقة 📥</button>
+    </div>
 
-<br>
+    <script>
+        const canvas = document.getElementById('cardCanvas');
+        const ctx = canvas.getContext('2d');
+        const image = new Image();
+        
+        image.src = 'card.jpg';
 
-<canvas id="cardCanvas" width="1080" height="1350"></canvas>
+        // هنا نأمر المتصفح بانتظار تحميل الخط والصورة معاً قبل الرسم
+        Promise.all([
+            new Promise(resolve => image.onload = resolve),
+            document.fonts.ready
+        ]).then(() => {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            drawCard();
+        });
 
-<br><br>
-<button onclick="downloadImage()">تحميل البطاقة</button>
+        function drawCard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-<script>
-const canvas = document.getElementById("cardCanvas");
-const ctx = canvas.getContext("2d");
+            const name = document.getElementById('nameInput').value;
 
-const image = new Image();
-image.src = "card.jpg";
+            if (name.trim() !== "") {
+                // تفعيل خط تجوال وتحديد الحجم (يمكنك تصغير 50px إذا كان الاسم طويلاً)
+                ctx.font = '700 50px "Tajawal", sans-serif'; 
+                ctx.fillStyle = '#105C66'; 
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
 
-image.onload = function () {
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-};
+                const x = canvas.width / 2;
+                
+                // قمنا بزيادة الرقم إلى 0.895 لإنزال النص داخل المربع الأبيض
+                const y = canvas.height * 0.895; 
 
-// قراءة الاسم من الرابط
-const urlParams = new URLSearchParams(window.location.search);
-const autoName = urlParams.get('name');
+                ctx.fillText(name, x, y);
+            }
+        }
 
-if (autoName) {
-    document.getElementById("nameInput").value = autoName;
-    setTimeout(generateCard, 500);
-}
+        function downloadCard() {
+            const name = document.getElementById('nameInput').value;
+            if (name.trim() === "") {
+                alert("الرجاء إدخال الاسم أولاً قبل تحميل البطاقة.");
+                return;
+            }
 
-function generateCard() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-    const name = document.getElementById("nameInput").value;
-
-    ctx.font = "bold 50px Cairo";
-    ctx.fillStyle = "#0c6b6b";
-    ctx.textAlign = "center";
-
-    ctx.fillText("من: " + name, canvas.width / 2, 1120);
-}
-
-function downloadImage() {
-    const link = document.createElement('a');
-    link.download = 'eid-card.png';
-    link.href = canvas.toDataURL();
-    link.click();
-}
-</script>
-
+            const link = document.createElement('a');
+            link.download = `تهنئة_جمعية_عمارة_${name}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
 </body>
 </html>
