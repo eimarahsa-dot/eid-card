@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: #f0f6f6; /* لون خلفية مريح */
+            background-color: #f0f6f6;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -27,7 +27,7 @@
             width: 100%;
         }
         h2 {
-            color: #105C66; /* لون مقارب للشعار */
+            color: #105C66;
             margin-bottom: 10px;
             font-size: 24px;
         }
@@ -82,16 +82,14 @@
             gap: 10px;
             text-decoration: none;
         }
-        /* زر التحميل */
         .btn-download {
-            background-color: #d39e35; /* اللون الذهبي من التصميم */
+            background-color: #d39e35;
         }
         .btn-download:hover {
             background-color: #b8862d;
         }
-        /* زر الواتساب */
         .btn-whatsapp {
-            background-color: #d39e35; /* لون ذهبي مطابق للتصميم */
+            background-color: #d39e35;
         }
         .btn-whatsapp:hover {
             background-color: #b8862d;
@@ -123,7 +121,6 @@
         
         image.src = 'card.jpg';
 
-        // التأكد من تحميل الخط والصورة قبل الرسم
         document.fonts.ready.then(() => {
             image.onload = () => {
                 canvas.width = image.width;
@@ -144,25 +141,18 @@
             const name = document.getElementById('nameInput').value;
 
             if (name.trim() !== "") {
-                // إعدادات الخط: تصغير الحجم ليتناسب مع المربع (45px)
                 ctx.font = '700 45px "Tajawal", sans-serif'; 
-                
-                // *** تم تعديل اللون هنا ***
-                ctx.fillStyle = '#105C66'; /* لون أخضر مزرق غامق مطابق تماماً للشعار وتصميم البطاقة */
-                
+                ctx.fillStyle = '#105C66'; 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
                 const x = canvas.width / 2;
-                
-                // *** تم تثبيت الرقم هنا (الرقم المثالي الذي يجعل النص في منتصف المربع الأبيض) ***
                 const y = canvas.height * 0.915; 
 
                 ctx.fillText(name, x, y);
             }
         }
 
-        // دالة مشتركة لإعداد رابط التحميل
         function prepareDownload() {
             const name = document.getElementById('nameInput').value;
             if (name.trim() === "") {
@@ -185,4 +175,17 @@
             link.click();
         }
 
-        function share
+        function shareOnWhatsApp(event) {
+            event.preventDefault();
+
+            const fileData = prepareDownload();
+            if(!fileData) return;
+
+            const name = document.getElementById('nameInput').value;
+            const message = `عيدكم مبارك، تقبل الله منا ومنكم صالح الأعمال.\nبطاقة تهنئة خاصة باسمك من جمعية عمارة للعناية بالمساجد بمنطقة جازان.\n\nيمكنك إنشاء بطاقتك أيضاً من هنا:\n${window.location.href}`;
+            const encodedMessage = encodeURIComponent(message);
+
+            const link = document.createElement('a');
+            link.download = fileData.filename;
+            link.href = fileData.dataUrl;
+            document.body.appendChild(link);
